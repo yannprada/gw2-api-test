@@ -1,0 +1,17 @@
+
+.item {
+  width: 100%;
+  clear: both;
+}
+.item img {
+  float: left;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
+.coins {
+  text-align: right;
+}
+.coins img {
+  margin: 0 0.2em;
+}
