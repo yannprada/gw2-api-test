@@ -1,7 +1,5 @@
 
 function show(item) {
-  console.log(item);
-  
   var div = document.createElement("div");
   div.classList.add('item');
 
@@ -10,25 +8,25 @@ function show(item) {
   div.appendChild(img);
 
   var span = document.createElement("span");
-  span.appendChild(document.createTextNode(item.name));
+  span.textContent = item.name;
   div.appendChild(span);
 
   div.appendChild(document.createElement("br"));
 
-  var spanEN = document.createElement("span");
-  spanEN.appendChild(document.createTextNode(item.nameEN));
-  div.appendChild(spanEN);
+  var small = document.createElement("small");
+  small.textContent = item.nameEN;
+  div.appendChild(small);
   
   document.body.appendChild(div);
 }
 
 function getItemInfos(id, fn) {
-  get("items/"+ id + "?lang=fr", function(dataFR) {
-    get("items/"+ id + "?lang=en", function(dataEN) {
-      var item = JSON.parse(dataFR);
-      item["nameEN"] = JSON.parse(dataEN)["name"];
-      fn(item);
-    });
+  var getFr = get("items/"+ id + "?lang=fr");
+  var getEn = get("items/"+ id + "?lang=en");
+  return Promise.all([getFr, getEn]).then(data => {
+    var item = JSON.parse(data[0]);
+    item["nameEN"] = JSON.parse(data[1])["name"];
+    return item;
   });
 }
 
@@ -79,18 +77,12 @@ function showCoins(copper, container) {
   renderCoins(convertCopper(copper), container);
 }
 
-function get(endpoint, fn) {
-  var client = new XMLHttpRequest();
-  client.onload = function() {
-      if(this.status == 200 &&
-      this.responseText != null) {
-      // success!
-      fn(this.responseText);
-    } else {
-      // something went wrong
-      console.log("Error: %d (%s)", this.status, this.statusText);
-    }
-  }
-  client.open("GET", "https://api.guildwars2.com/v2/" + endpoint);
-  client.send();
+function get(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://api.guildwars2.com/v2/" + url);
+    xhr.onload = () => resolve(xhr.responseText);
+    xhr.onerror = () => reject(xhr.statusText);
+    xhr.send();
+  });
 }

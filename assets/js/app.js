@@ -1,23 +1,14 @@
 
 
 function ready() {
-  showCoins(1, document.body);
-  showCoins(123, document.body);
-  showCoins(12345, document.body);
-  showCoins(543201, document.body);
-  showCoins(320100, document.body);
-  showCoins(10000, document.body);
-  showCoins(990099, document.body);
+  // showCoins(1, document.body);
+  // showCoins(123, document.body);
+  // showCoins(12345, document.body);
+  // showCoins(543201, document.body);
+  // showCoins(320100, document.body);
+  // showCoins(10000, document.body);
+  // showCoins(990099, document.body);
 
-  // get("materials", function(data) {
-  //   var materials = JSON.parse(data);
-  //   materials.forEach(function(id) {
-  //     get("materials\\" + id, function(data) {
-  //       var material = JSON.parse(data);
-  //       console.log(material);
-  //     });
-  //   });
-  // });
   var ores = {
     19697: {
       tier: 1,
@@ -42,9 +33,15 @@ function ready() {
     },
   };
 
+  var itemPromises = []
   for (var id in ores) {
-    getItemInfos(id, show);
+    itemPromises.push(getItemInfos(id));
   }
+  Promise.all(itemPromises).then(items => {
+    for (var i = 0; i < items.length; i++) {
+      show(items[i]);
+    }
+  });
 }
 
 if (document.readyState !== 'loading') {
