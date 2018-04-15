@@ -1,13 +1,9 @@
 
 
 function ready() {
-  // showCoins(1, document.body);
-  // showCoins(123, document.body);
-  // showCoins(12345, document.body);
-  // showCoins(543201, document.body);
-  // showCoins(320100, document.body);
-  // showCoins(10000, document.body);
-  // showCoins(990099, document.body);
+  for (var amount of [1, 123, 12345, 543201, 320100, 10000, 990099]) {
+    document.body.insertAdjacentHTML("beforeend", new Price(amount).html);
+  }
 
   var ores = {
     19697: {
@@ -33,15 +29,10 @@ function ready() {
     },
   };
 
-  var itemPromises = []
-  for (var id in ores) {
-    itemPromises.push(getItemInfos(id));
-  }
-  Promise.all(itemPromises).then(items => {
-    for (var i = 0; i < items.length; i++) {
-      show(items[i]);
-    }
-  });
+  var items = Object.keys(ores).map(id => new Item(id));
+
+  Promise.all(items.map(item => item.make()))
+  .then(() => items.map(item => document.body.insertAdjacentHTML("beforeend", item.html)));
 }
 
 if (document.readyState !== 'loading') {
