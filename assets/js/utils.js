@@ -8,3 +8,12 @@ function get(url) {
     xhr.send();
   });
 }
+
+function selectMe() {
+  document.body.addEventListener("click", function(event) {
+    if (event.target.classList.contains("js-selectme")) {
+      event.target.focus();
+      event.target.select();
+    }
+  });
+}

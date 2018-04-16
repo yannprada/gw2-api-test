@@ -14,6 +14,7 @@ class Item {
       this.nameEN = dataEN["name"];
       this.name = dataFR["name"];
       this.icon = dataFR["icon"];
+      this.chat_link = dataFR["chat_link"];
     });
   }
 
@@ -23,6 +24,12 @@ class Item {
       <span>${ this.name }</span>
       <br/>
       <small>${ this.nameEN }</small>
+      <br/>
+      <input class="js-selectme" value="${ this.chat_link }" readonly/>
     </div>`
+  }
+
+  build(position, container) {
+    container.insertAdjacentHTML(position, this.html);
   }
 }
